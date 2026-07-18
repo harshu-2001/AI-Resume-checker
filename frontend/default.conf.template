@@ -1,0 +1,29 @@
+server {
+    listen 80;
+    server_name _;
+
+    root /usr/share/nginx/html;
+    index index.html;
+
+    location / {
+        try_files $uri /index.html;
+    }
+
+    # Proxy API calls to the backend service.
+    # BACKEND_HOST is injected at container startup via envsubst
+    # (nginx:alpine's docker-entrypoint.d/20-envsubst-on-templates.sh),
+    # reading from templates/default.conf.template -> conf.d/default.conf.
+    resolver 8.8.8.8 valid=30s;
+    set $backend_upstream "${BACKEND_HOST}";
+
+    location /api/ {
+        proxy_pass https://$backend_upstream/;
+        proxy_set_header Host $backend_upstream;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_ssl_server_name on;
+        proxy_ssl_name $backend_upstream;
+        proxy_read_timeout 300s;   # local LLM responses can be slow
+        proxy_send_timeout 300s;
+        client_max_body_size 20M;  # allow reasonably large resume uploads
+    }
+}

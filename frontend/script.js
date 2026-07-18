@@ -1,5 +1,11 @@
 const RING_CIRCUMFERENCE = 540.35; // 2 * PI * 86
 
+// API_BASE comes from window.APP_CONFIG (generated at container start from
+// the API_BASE_URL env var, see config.template.js). If it's unset/empty,
+// fall back to the relative "/api" path proxied by nginx.
+const rawApiBase = (window.APP_CONFIG && window.APP_CONFIG.apiBaseUrl) || "";
+const API_BASE = rawApiBase ? rawApiBase.replace(/\/+$/, "") : "/api";
+
 const el = (id) => document.getElementById(id);
 
 const form = el("analyzeForm");
@@ -19,7 +25,7 @@ async function checkHealth() {
   const dot = el("statusDot");
   const text = el("statusText");
   try {
-    const res = await fetch("/api/health");
+    const res = await fetch(`${API_BASE}/health`);
     const data = await res.json();
     dot.classList.add("ok");
     text.textContent = data.llm_enabled ? "engine ready · llm on" : "engine ready · local only";
@@ -91,7 +97,7 @@ form.addEventListener("submit", async (e) => {
   setLoading(true);
 
   try {
-    const res = await fetch("/api/analyze", {
+    const res = await fetch(`${API_BASE}/analyze`, {
       method: "POST",
       body: formData,
     });
