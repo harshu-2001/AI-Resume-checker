@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resume ↔ JD Match</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="grain"></div>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="brand-mark">◈</span>
+        <span class="brand-text">resume<span class="brand-accent">.match</span></span>
+      </div>
+      <div class="status" id="statusPill">
+        <span class="status-dot" id="statusDot"></span>
+        <span id="statusText">checking engine…</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="intake">
+      <h1 class="hero-line">
+        Paste a job.<br />
+        Drop a résumé.<br />
+        <span class="hero-accent">See the gap.</span>
+      </h1>
+      <p class="hero-sub">
+        Runs a literal ATS keyword scan plus semantic similarity — locally,
+        with an optional LLM pass layered on top.
+      </p>
+
+      <form id="analyzeForm" class="form-card">
+        <label class="field-label" for="jdInput">Job description</label>
+        <textarea
+          id="jdInput"
+          class="jd-textarea"
+          placeholder="Paste the full job description here…"
+          required
+        ></textarea>
+
+        <label class="field-label" for="fileInput">Résumé file</label>
+        <div class="dropzone" id="dropzone">
+          <input type="file" id="fileInput" accept=".pdf,.docx,.txt" hidden />
+          <div class="dropzone-inner" id="dropzoneInner">
+            <span class="dropzone-icon">↑</span>
+            <span class="dropzone-text">
+              <strong>Click to choose</strong> or drag a file here
+              <br /><span class="dropzone-hint">PDF · DOCX · TXT</span>
+            </span>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submitBtn">
+          <span id="submitBtnText">Run analysis</span>
+        </button>
+        <p class="error-msg" id="errorMsg" hidden></p>
+      </form>
+    </section>
+
+    <section class="results" id="resultsSection" hidden>
+      <div class="results-grid">
+        <div class="score-card">
+          <div class="ring-wrap">
+            <svg viewBox="0 0 200 200" class="ring-svg">
+              <circle cx="100" cy="100" r="86" class="ring-track" />
+              <circle cx="100" cy="100" r="86" class="ring-fill" id="ringFill" />
+            </svg>
+            <div class="ring-center">
+              <span class="ring-number" id="overallScore">–</span>
+              <span class="ring-label">overall match</span>
+            </div>
+          </div>
+          <div class="submetrics">
+            <div class="submetric">
+              <span class="submetric-value" id="similarityScore">–</span>
+              <span class="submetric-label">semantic similarity</span>
+            </div>
+            <div class="submetric">
+              <span class="submetric-value" id="keywordScore">–</span>
+              <span class="submetric-label">keyword coverage</span>
+            </div>
+          </div>
+          <div class="llm-badge" id="llmBadge"></div>
+        </div>
+
+        <div class="detail-card">
+          <div class="detail-block">
+            <h2 class="detail-heading">Matched <span class="count" id="matchedCount"></span></h2>
+            <div class="chip-row" id="matchedSkills"></div>
+          </div>
+          <div class="detail-block">
+            <h2 class="detail-heading detail-heading-missing">Missing <span class="count" id="missingCount"></span></h2>
+            <div class="chip-row" id="missingSkills"></div>
+            <p class="empty-note" id="missingEmptyNote" hidden>Full keyword coverage. Nothing missing.</p>
+          </div>
+          <div class="detail-block">
+            <h2 class="detail-heading">Suggestions</h2>
+            <ol class="suggestion-list" id="suggestionList"></ol>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

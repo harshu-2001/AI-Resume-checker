@@ -1,0 +1,35 @@
+services:
+  resume-analyzer:
+    build: .
+    container_name: ai-resume-analyzer
+    ports:
+      - "8000:8000"
+    environment:
+      # Optional — leave unset to run fully offline with local TF-IDF scoring.
+      - LLM_API_KEY=${LLM_API_KEY:-}
+      - LLM_API_BASE=${LLM_API_BASE:-https://api.openai.com/v1}
+      - LLM_MODEL=${LLM_MODEL:-gpt-4o-mini}
+      - LLM_TIMEOUT_SECONDS=${LLM_TIMEOUT_SECONDS:-300}
+    extra_hosts:
+      # Lets the container reach an LLM server (e.g. LM Studio) running on
+      # your host machine, via http://host.docker.internal:<port>/v1
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+    networks:
+      - resume-net
+
+  frontend:
+    build: ./frontend
+    container_name: ai-resume-analyzer-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - resume-analyzer
+    restart: unless-stopped
+    networks:
+      - resume-net
+
+networks:
+  resume-net:
+    driver: bridge
+
