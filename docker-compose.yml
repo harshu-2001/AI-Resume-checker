@@ -7,7 +7,7 @@ services:
     environment:
       # Optional — leave unset to run fully offline with local TF-IDF scoring.
       - LLM_API_KEY=${LLM_API_KEY:-lm-studio}
-      - LLM_API_BASE=${LLM_API_BASE:-http://127.0.0.1:1234/v1} # e.g. LM Studio or OpenAI API base URL
+      - LLM_API_BASE=${LLM_API_BASE:-http://192.168.1.2:1234/v1} # e.g. LM Studio or OpenAI API base URL
       - LLM_MODEL=${LLM_MODEL:-gpt-4o-mini}
       - LLM_TIMEOUT_SECONDS=${LLM_TIMEOUT_SECONDS:-300}
     extra_hosts:
