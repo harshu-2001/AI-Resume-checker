@@ -18,7 +18,7 @@ import requests
 
 logger = logging.getLogger("app.llm")
 
-LLM_API_KEY = os.getenv("LLM_API_KEY", "")
+LLM_API_KEY = os.getenv("LLM_API_KEY", "lm-studio")
 LLM_API_BASE = os.getenv("LLM_API_BASE", "http://127.0.0.1:1234/v1")
 LLM_MODEL = os.getenv("LLM_MODEL", "gpt-4o-mini")
 LLM_TIMEOUT_SECONDS = int(os.getenv("LLM_TIMEOUT_SECONDS", "300"))
